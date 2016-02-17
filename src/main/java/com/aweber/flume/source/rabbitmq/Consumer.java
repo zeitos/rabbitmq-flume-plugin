@@ -48,6 +48,7 @@ public class Consumer implements Runnable {
     private String password;
     private String queue;
     private boolean autoAck = false;
+    private boolean requeuing = false;
     private int prefetchCount = 0;
 
     public Consumer() {
@@ -105,6 +106,11 @@ public class Consumer implements Runnable {
 
     public Consumer setAutoAck(boolean autoAck) {
         this.autoAck = autoAck;
+        return this;
+    }
+
+    public Consumer setRequeuing(boolean requeuing) {
+        this.requeuing = requeuing;
         return this;
     }
 
@@ -196,7 +202,7 @@ public class Consumer implements Runnable {
 
     private void rejectMessage(long deliveryTag) {
         try {
-            channel.basicReject(deliveryTag, false);
+            channel.basicReject(deliveryTag, requeuing);
         } catch (IOException ex) {
             logger.error("Error rejecting message from {}: {}", this, ex);
             counterGroup.incrementAndGet(COUNTER_EXCEPTION);
