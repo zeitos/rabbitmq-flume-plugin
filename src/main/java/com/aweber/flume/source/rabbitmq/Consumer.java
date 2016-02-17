@@ -162,7 +162,7 @@ public class Consumer implements Runnable {
                 try {
                     channelProcessor.processEvent(parseMessage(envelope, properties, body));
                     sourceCounter.incrementEventAcceptedCount();
-                    ackMessage(envelope.getDeliveryTag());
+                    if(!autoAck) ackMessage(envelope.getDeliveryTag());
                 } catch (Exception ex) {
                     logger.error("Error writing to channel for {}, message rejected {}", this, ex);
                     rejectMessage(envelope.getDeliveryTag());
