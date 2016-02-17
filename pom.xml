@@ -4,7 +4,7 @@
 
   <groupId>com.aweber</groupId>
   <artifactId>rabbitmq-flume-plugin</artifactId>
-  <version>1.0.3_zeitos_patch3</version>
+  <version>1.0.3_patch4</version>
   <packaging>jar</packaging>
 
   <name>rabbitmq-flume-plugin</name>
