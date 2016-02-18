@@ -31,6 +31,7 @@ public class RabbitMQSource extends AbstractSource implements Configurable, Even
     private static final String QUEUE_KEY = "queue";
     private static final String AUTOACK_KEY = "auto-ack";
     private static final String REQUEUING = "requeuing";
+    private static final String HEARTBEAT = "heartbeat";
     private static final String PREFETCH_COUNT_KEY = "prefetch-count";
     private static final String THREAD_COUNT_KEY = "threads";
     private SourceCounter sourceCounter;
@@ -45,6 +46,7 @@ public class RabbitMQSource extends AbstractSource implements Configurable, Even
     private String queue;
     private boolean autoAck = false;
     private boolean requeuing = false;
+    private int heartbeat = -1;
     private int prefetchCount = 0;
     private int consumerThreads = 1;
 
@@ -76,6 +78,7 @@ public class RabbitMQSource extends AbstractSource implements Configurable, Even
         queue = context.getString(QUEUE_KEY, null);
         autoAck = context.getBoolean(AUTOACK_KEY, false);
         requeuing = context.getBoolean(REQUEUING, false);
+        heartbeat = context.getInteger(HEARTBEAT, -1);
         prefetchCount = context.getInteger(PREFETCH_COUNT_KEY, 0);
         consumerThreads = context.getInteger(THREAD_COUNT_KEY, 1);
 
@@ -104,6 +107,7 @@ public class RabbitMQSource extends AbstractSource implements Configurable, Even
                     .setPrefetchCount(prefetchCount)
                     .setAutoAck(autoAck)
                     .setRequeuing(requeuing)
+                    .setHeartbeat(heartbeat)
                     .setChannelProcessor(getChannelProcessor())
                     .setSourceCounter(sourceCounter)
                     .setCounterGroup(counterGroup);

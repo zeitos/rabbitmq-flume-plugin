@@ -49,6 +49,7 @@ public class Consumer implements Runnable {
     private String queue;
     private boolean autoAck = false;
     private boolean requeuing = false;
+    private int heartbeat = -1;
     private int prefetchCount = 0;
 
     public Consumer() {
@@ -106,6 +107,11 @@ public class Consumer implements Runnable {
 
     public Consumer setAutoAck(boolean autoAck) {
         this.autoAck = autoAck;
+        return this;
+    }
+
+    public Consumer setHeartbeat(int heartbeat) {
+        this.heartbeat = heartbeat;
         return this;
     }
 
@@ -317,9 +323,8 @@ public class Consumer implements Runnable {
         logger.debug("Connecting to RabbitMQ from {}", this);
         config = config.withRecoveryPolicy(RecoveryPolicies.recoverAlways())
                     .withRetryPolicy(new RetryPolicy()
-                            .withMaxAttempts(200)
-                            .withInterval(Duration.seconds(1))
-                            .withMaxDuration(Duration.minutes(5)));
+                            .withBackoff(Duration.seconds(1), Duration.seconds(256))
+                            .withMaxAttempts(20));
 
         ConnectionOptions options = new ConnectionOptions()
                 .withHost(hostname)
@@ -328,6 +333,9 @@ public class Consumer implements Runnable {
                 .withUsername(username)
                 .withPassword(password)
                 ;
+        if (heartbeat >= 0) {
+            options.withRequestedHeartbeat(Duration.seconds(heartbeat));
+        }
         if (sslEnabled) {
             try {
                 options = options.withSsl();
