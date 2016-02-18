@@ -4,7 +4,7 @@
 
   <groupId>com.aweber</groupId>
   <artifactId>rabbitmq-flume-plugin</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.3_patch9</version>
   <packaging>jar</packaging>
 
   <name>rabbitmq-flume-plugin</name>
@@ -45,6 +45,11 @@
       <groupId>com.rabbitmq</groupId>
       <artifactId>amqp-client</artifactId>
       <version>${rabbitmq.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>net.jodah</groupId>
+      <artifactId>lyra</artifactId>
+      <version>0.5.0</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
